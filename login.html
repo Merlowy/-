@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录 — SAKURA</title>
+  <link rel="stylesheet" href="css/style.css?v=11">
+</head>
+<body class="glass-page">
+
+  <div class="glass-bg" aria-hidden="true"></div>
+
+  <main class="gl-main">
+    <div class="gl-stack" id="glStack">
+
+      <!-- 登录卡片（默认在前） -->
+      <div class="gl-card is-front" id="loginCard">
+
+        <div class="gl-bar">
+          <span class="gl-dot"></span><span class="gl-dot"></span><span class="gl-dot"></span>
+          <span class="gl-bar-title">sakura — login</span>
+          <a class="gl-bar-link" href="store.html">← 返回商店</a>
+        </div>
+
+        <div class="gl-body">
+          <p class="gl-cmd">$ sakura auth login</p>
+
+          <form class="gl-form" id="loginForm">
+            <div class="gl-field">
+              <label class="gl-label" for="glEmail">&gt; 邮箱</label>
+              <input class="gl-input" id="glEmail" type="email" required autocomplete="email">
+            </div>
+            <div class="gl-field">
+              <label class="gl-label" for="glPass">&gt; 密码</label>
+              <input class="gl-input" id="glPass" type="password" required autocomplete="current-password">
+            </div>
+
+            <div class="gl-row">
+              <label class="gl-check">
+                <input type="checkbox" name="remember"> 记住我
+              </label>
+              <a class="gl-link" href="#">忘记密码？</a>
+            </div>
+
+            <button type="submit" class="co-paybar gl-submit">
+              <span class="co-pay-left">
+                <span class="co-pay-prompt">$</span> login
+              </span>
+              <span class="co-key">enter ↵</span>
+            </button>
+            <p class="gl-msg" id="loginMsg">// 登录成功，正在跳转…</p>
+          </form>
+
+          <p class="gl-foot">还没有账号？<a class="gl-link" id="toReg" href="#">注册新账号</a></p>
+        </div>
+
+        <div class="gl-status">
+          <span><span class="co-status-dot">●</span> secure</span>
+          <span class="gl-status-right">sakura auth v0.1.0</span>
+        </div>
+
+      </div>
+
+      <!-- 注册卡片（露出一角，点击滑到前面） -->
+      <div class="gl-card is-back" id="regCard" aria-label="切换到注册卡片">
+
+        <div class="gl-bar">
+          <span class="gl-dot"></span><span class="gl-dot"></span><span class="gl-dot"></span>
+          <span class="gl-bar-title">sakura — register</span>
+          <a class="gl-bar-link" href="store.html">← 返回商店</a>
+        </div>
+
+        <div class="gl-body">
+          <p class="gl-cmd">$ sakura auth register</p>
+
+          <form class="gl-form" id="regForm">
+            <div class="gl-field">
+              <label class="gl-label" for="glRegEmail">&gt; 邮箱</label>
+              <input class="gl-input" id="glRegEmail" type="email" required autocomplete="email">
+            </div>
+            <div class="gl-field">
+              <label class="gl-label" for="glRegPass">&gt; 密码</label>
+              <input class="gl-input" id="glRegPass" type="password" required autocomplete="new-password">
+            </div>
+            <div class="gl-field">
+              <label class="gl-label" for="glRegPass2">&gt; 确认密码</label>
+              <input class="gl-input" id="glRegPass2" type="password" required autocomplete="new-password">
+            </div>
+
+            <button type="submit" class="co-paybar gl-submit">
+              <span class="co-pay-left">
+                <span class="co-pay-prompt">$</span> register
+              </span>
+              <span class="co-key">enter ↵</span>
+            </button>
+            <p class="gl-msg" id="regMsg">// 注册成功，正在为你登录…</p>
+          </form>
+
+          <p class="gl-foot">已有账号？<a class="gl-link" id="toLogin" href="#">直接登录</a></p>
+        </div>
+
+        <div class="gl-status">
+          <span><span class="co-status-dot">●</span> secure</span>
+          <span class="gl-status-right">sakura auth v0.1.0</span>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 进入页面时的欢迎弹窗 -->
+  <div class="welcome-pop" id="welcomePop" role="status" aria-label="Welcome Back">
+    <span class="welcome-text">❀ Welcome Back</span>
+  </div>
+
+  <!-- 小纸船：乘风向右 -->
+  <div class="paper-boat" aria-hidden="true">
+    <svg width="64" height="46" viewBox="0 0 64 46">
+      <!-- 风（船尾阵风线） -->
+      <g>
+        <line class="wind-line" x1="2" y1="16" x2="14" y2="16"/>
+        <line class="wind-line" x1="0" y1="24" x2="11" y2="24"/>
+        <line class="wind-line" x1="4" y1="31" x2="15" y2="31"/>
+      </g>
+      <!-- 纸船 -->
+      <g>
+        <path class="boat-line" d="M40 8 L28 30 H52 Z"/>
+        <path class="boat-line" d="M20 30 H60 L50 40 H30 Z"/>
+        <path class="boat-crease boat-line" d="M40 12 V30"/>
+      </g>
+      <!-- 波浪 -->
+      <path class="boat-wave" d="M16 43 Q20 40 24 43 T32 43 T40 43 T48 43 T56 43 T64 43"/>
+    </svg>
+  </div>
+
+  <script>
+    // ===== 欢迎弹窗：本次会话第一次进入才弹 =====
+    if (!sessionStorage.getItem("sakuraWelcomed")) {
+      document.getElementById("welcomePop").classList.add("show");
+      sessionStorage.setItem("sakuraWelcomed", "1");
+    }
+
+    // ===== 叠卡切换：登录 ⇄ 注册 =====
+    const loginCard = document.getElementById("loginCard");
+    const regCard = document.getElementById("regCard");
+
+    // 折叠时只冻结卡片内部（inert 加在子元素上，卡片本体保持可点击）
+    function setFolded(card, folded) {
+      card.classList.toggle("is-front", !folded);
+      card.classList.toggle("is-back", folded);
+      Array.from(card.children).forEach((child) => (child.inert = folded));
+    }
+    function bringToFront(card) {
+      if (card.classList.contains("is-front")) return;
+      const other = card === loginCard ? regCard : loginCard;
+      setFolded(card, false);
+      setFolded(other, true);
+    }
+    setFolded(regCard, true);
+
+    // 点击露出的卡片一角，把它滑到前面
+    [loginCard, regCard].forEach((card) => {
+      card.addEventListener("click", () => {
+        if (card.classList.contains("is-back")) bringToFront(card);
+      });
+    });
+    document.getElementById("toReg").addEventListener("click", (e) => {
+      e.preventDefault();
+      bringToFront(regCard);
+    });
+    document.getElementById("toLogin").addEventListener("click", (e) => {
+      e.preventDefault();
+      bringToFront(loginCard);
+    });
+
+    document.getElementById("loginForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      document.getElementById("loginMsg").classList.add("show");
+      setTimeout(() => { window.location.href = "store.html"; }, 600);
+    });
+    document.getElementById("regForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      document.getElementById("regMsg").classList.add("show");
+      setTimeout(() => { window.location.href = "store.html"; }, 600);
+    });
+  </script>
+</body>
+</html>

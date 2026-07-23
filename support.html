@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>客服 — SAKURA</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="support-page">
+
+  <main class="sp-wrap">
+    <div class="co-card sp-card">
+
+      <!-- 顶部标签栏 -->
+      <div class="co-tabbar">
+        <div class="co-tab">
+          <span class="co-tab-icon">▣</span> sakura — support
+        </div>
+        <div class="co-tab-right">
+          <a class="co-toplink" href="index.html">← 返回</a>
+        </div>
+      </div>
+
+      <!-- 状态行 -->
+      <div class="sp-head">
+        <span><span class="co-status-dot">●</span> <span id="spStatus">在线</span></span>
+        <span>服务时间 每天 9:00 – 22:00</span>
+        <span class="co-status-right" style="margin-left:auto">sakura support v0.1.0</span>
+      </div>
+
+      <!-- 聊天区 -->
+      <div class="sp-chat">
+        <div class="sp-messages" id="spMessages">
+          <div class="sp-msg sp-msg-bot">
+            你好，这里是 SAKURA 客服 👋<br>
+            订单、售后、商品咨询都可以直接留言。<br>
+            人工客服服务时间为 <strong>每天 9:00 – 22:00</strong>。
+          </div>
+        </div>
+
+        <!-- 毛玻璃输入框 -->
+        <div class="sp-inputbar">
+          <form class="sp-input-glass" id="spForm">
+            <input type="text" id="spInput" placeholder="输入消息…" autocomplete="off">
+            <button type="submit" class="sp-send" aria-label="发送">➤</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Tor 网络弹窗 -->
+  <div class="sx-pop tor-pop" id="torPop">
+    <svg class="sx-logo" viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="#7d4698" stroke-linecap="round">
+      <ellipse cx="24" cy="27" rx="15" ry="16" stroke-width="3"/>
+      <ellipse cx="24" cy="27" rx="9" ry="11" stroke-width="2.6"/>
+      <path d="M24 16 v22" stroke-width="2.4"/>
+      <path d="M24 15 C21 10, 24 6, 28 4 C26 8, 27 12, 24 15 Z" fill="#7d4698" stroke="none"/>
+    </svg>
+    <span class="tor-text">是否启用 Tor 网络</span>
+    <label class="tor-switch">
+      <input type="checkbox" id="torToggle">
+      <span class="tor-slider"></span>
+    </label>
+  </div>
+
+  <!-- SimpleX 提示弹窗 -->
+  <div class="sx-pop" id="sxPop" aria-hidden="true">
+    <svg class="sx-logo" viewBox="0 0 120 120" width="44" height="44" fill="none">
+      <defs>
+        <linearGradient id="sxBlue" x1="30" y1="10" x2="110" y2="110" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#7edcf5"/>
+          <stop offset="0.5" stop-color="#4a9af0"/>
+          <stop offset="1" stop-color="#2f6fe4"/>
+        </linearGradient>
+      </defs>
+      <g stroke="url(#sxBlue)" stroke-width="15">
+        <path d="M36 8 L112 84"/>
+        <path d="M8 36 L84 112"/>
+        <path d="M8 84 L84 8"/>
+        <path d="M36 112 L112 36"/>
+      </g>
+      <g stroke="#101c4e" stroke-width="15">
+        <path d="M6 38 L54 86"/>
+        <path d="M6 86 L54 38"/>
+      </g>
+    </svg>
+    <span class="sx-text">对话建立在 SimpleX Chat</span>
+  </div>
+
+  <script>
+    const messages = document.getElementById("spMessages");
+    const form = document.getElementById("spForm");
+    const input = document.getElementById("spInput");
+    const statusEl = document.getElementById("spStatus");
+
+    const inServiceHours = () => {
+      const h = new Date().getHours();
+      return h >= 9 && h < 22;
+    };
+    statusEl.textContent = inServiceHours() ? "在线" : "离线（非服务时间）";
+
+    const fmtTime = () => {
+      const d = new Date();
+      return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+    };
+
+    const TICK_SVG = (double) =>
+      '<svg viewBox="0 0 19 11" width="18" height="11" fill="none" stroke="currentColor" ' +
+      'stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' +
+      (double
+        ? '<path d="M1 6 L4.4 9.4 L12 1.8"/><path d="M7.5 6 L10.9 9.4 L18.5 1.8"/>'
+        : '<path d="M4 6 L7.4 9.4 L15 1.8"/>') +
+      "</svg>";
+
+    const addMeta = (div, who) => {
+      const meta = document.createElement("span");
+      meta.className = "sp-meta";
+      const time = document.createElement("span");
+      time.className = "sp-time";
+      time.textContent = fmtTime();
+      meta.appendChild(time);
+      let ticks = null;
+      if (who === "user") {
+        ticks = document.createElement("span");
+        ticks.className = "sp-ticks";
+        ticks.innerHTML = TICK_SVG(false);
+        meta.appendChild(ticks);
+      }
+      div.appendChild(meta);
+      return ticks;
+    };
+
+    const addMsg = (text, who) => {
+      const div = document.createElement("div");
+      div.className = "sp-msg sp-msg-" + who;
+      div.textContent = text;
+      const ticks = addMeta(div, who);
+      if (ticks) {
+        setTimeout(() => {
+          ticks.innerHTML = TICK_SVG(true);
+          ticks.classList.add("read");
+        }, 900);
+      }
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    };
+
+    addMeta(document.querySelector(".sp-msg-bot"), "bot");
+
+    // ===== 纸飞机：进入页面后从左上角 S 形飞到右下角，一次后消失 =====
+    const flyPlane = () => {
+      const chat = document.querySelector(".sp-chat");
+      const w = chat.clientWidth;
+      const h = chat.clientHeight;
+      const el = document.createElement("div");
+      el.className = "sp-plane";
+      el.innerHTML =
+        '<svg viewBox="0 0 24 24" width="34" height="34" fill="#6fbf3f">' +
+        '<path d="M2.4 20.6 L22.6 12 L2.4 3.4 L2.4 9.8 L16.4 12 L2.4 14.2 Z"/></svg>';
+      el.style.offsetPath =
+        "path('M 20 20 " +
+        "C " + 0.65 * w + " " + 0.05 * h + ", " + 0.9 * w + " " + 0.3 * h + ", " + 0.5 * w + " " + 0.48 * h + " " +
+        "C " + 0.12 * w + " " + 0.62 * h + ", " + 0.3 * w + " " + 0.85 * h + ", " + (w - 50) + " " + (h - 50) + "')";
+      chat.appendChild(el);
+      el.addEventListener("animationend", () => el.remove());
+    };
+    setTimeout(flyPlane, 1000);
+
+    // ===== 右下角弹窗：2s 后一起滑入；SimpleX 停 4.5s，Tor 停 5.5s =====
+    const sxPop = document.getElementById("sxPop");
+    const torPop = document.getElementById("torPop");
+    setTimeout(() => {
+      sxPop.classList.add("show");
+      torPop.classList.add("show");
+      setTimeout(() => sxPop.classList.remove("show"), 5200);
+      setTimeout(() => torPop.classList.remove("show"), 6200);
+    }, 2000);
+
+    document.getElementById("torToggle").addEventListener("change", (e) => {
+      toast(e.target.checked ? "Tor 网络已启用（演示）" : "Tor 网络已关闭");
+    });
+
+    const ICONS = [
+      '<svg width="26" height="26" viewBox="0 0 24 24"><rect x="10" y="1" width="4" height="3" rx="1" fill="#6fbf3f"/><circle cx="12" cy="14" r="9" fill="#6fbf3f"/><line x1="12" y1="14" x2="12" y2="9.2" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>',
+      '<svg width="26" height="26" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" fill="#9a9a94"/><path d="M8.5 8.5 L15.5 15.5 M15.5 8.5 L8.5 15.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>',
+      '<svg width="26" height="26" viewBox="0 0 24 24"><circle cx="11" cy="13" r="8.5" fill="#6fbf3f"/><circle cx="8.4" cy="11.5" r="1.1" fill="#fff"/><circle cx="13.6" cy="11.5" r="1.1" fill="#fff"/><path d="M7.8 15.2 Q11 18 14.2 15.2" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M19 3 v6 M16 6 h6" stroke="#6fbf3f" stroke-width="2" stroke-linecap="round"/></svg>',
+      '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6fbf3f" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="2.5" width="6" height="11" rx="3"/><path d="M5.5 11.5 a6.5 6.5 0 0 0 13 0"/><line x1="12" y1="18" x2="12" y2="21.5"/></svg>',
+      '<svg width="26" height="26" viewBox="0 0 24 24" fill="#6fbf3f"><path d="M6.6 3.2c.5-.5 1.3-.5 1.8 0l2.3 2.3c.5.5.5 1.3 0 1.8l-1.2 1.2c-.3.3-.3.8-.1 1.2 1.2 2 2.9 3.7 4.9 4.9.4.2.9.2 1.2-.1l1.2-1.2c.5-.5 1.3-.5 1.8 0l2.3 2.3c.5.5.5 1.3 0 1.8l-1.6 1.6c-.9.9-2.3 1.2-3.5.7-3.1-1.3-5.9-3.3-8.1-5.9-1.7-2-3-4.3-3.9-6.8-.4-1.2-.1-2.5.8-3.4z"/></svg>'
+    ];
+
+    let noticeShown = false;
+    const showNotice = () => {
+      const div = document.createElement("div");
+      div.className = "sp-notice";
+      div.innerHTML =
+        "<p>消息、文件和通话受带完全前向保密、可否认性和试验性恢复的<strong>抗量子端到端加密</strong>保护。</p>" +
+        '<div class="sp-notice-icons">' + ICONS.join("") + "</div>";
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    };
+
+    // ===== 消息删除（对自己 / 对所有人）=====
+    const menu = document.createElement("div");
+    menu.className = "sp-menu";
+    menu.innerHTML =
+      '<button type="button" data-act="copy">复制</button>' +
+      '<button type="button" data-del="me">对自己删除</button>' +
+      '<button type="button" data-del="all" class="danger">对所有人删除</button>';
+    document.body.appendChild(menu);
+    let delTarget = null;
+
+    const openMenu = (msg, x, y) => {
+      delTarget = msg;
+      const isUser = msg.classList.contains("sp-msg-user");
+      menu.querySelectorAll("[data-del]").forEach((b) => {
+        b.style.display = isUser ? "" : "none";
+      });
+      menu.classList.add("show");
+      const r = menu.getBoundingClientRect();
+      menu.style.left = Math.min(x, window.innerWidth - r.width - 8) + "px";
+      menu.style.top = Math.min(y, window.innerHeight - r.height - 8) + "px";
+    };
+    const hideMenu = () => {
+      menu.classList.remove("show");
+      delTarget = null;
+    };
+
+    messages.addEventListener("click", (e) => {
+      const msg = e.target.closest(".sp-msg");
+      if (msg) {
+        e.stopPropagation();
+        openMenu(msg, e.clientX, e.clientY);
+      }
+    });
+    messages.addEventListener("contextmenu", (e) => {
+      const msg = e.target.closest(".sp-msg");
+      if (msg) {
+        e.preventDefault();
+        openMenu(msg, e.clientX, e.clientY);
+      }
+    });
+    document.addEventListener("click", (e) => {
+      if (!menu.contains(e.target)) hideMenu();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") hideMenu();
+    });
+
+    const toast = (text) => {
+      const t = document.createElement("div");
+      t.className = "sp-toast";
+      t.textContent = text;
+      document.body.appendChild(t);
+      setTimeout(() => t.classList.add("hide"), 1100);
+      setTimeout(() => t.remove(), 1500);
+    };
+
+    menu.addEventListener("click", (e) => {
+      const copyBtn = e.target.closest("[data-act='copy']");
+      if (copyBtn && delTarget) {
+        const clone = delTarget.cloneNode(true);
+        const meta = clone.querySelector(".sp-meta");
+        if (meta) meta.remove();
+        const text = clone.textContent.trim();
+        hideMenu();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(
+            () => toast("已复制"),
+            () => toast("复制失败")
+          );
+        } else {
+          toast("复制失败");
+        }
+        return;
+      }
+      const btn = e.target.closest("[data-del]");
+      if (!btn || !delTarget) return;
+      const mode = btn.dataset.del;
+      const msg = delTarget;
+      hideMenu();
+      tearDelete(msg, mode);
+    });
+
+    // 撕裂 + 坠落删除动画
+    const tearDelete = (msg, mode) => {
+      const rect = msg.getBoundingClientRect();
+      const wrap = document.createElement("div");
+      wrap.className = "tear-wrap";
+      wrap.style.left = rect.left + "px";
+      wrap.style.top = rect.top + "px";
+      wrap.style.width = rect.width + "px";
+      wrap.style.height = rect.height + "px";
+      ["tear-left", "tear-right"].forEach((side) => {
+        const half = msg.cloneNode(true);
+        half.classList.add("tear-half", side);
+        wrap.appendChild(half);
+      });
+      document.body.appendChild(wrap);
+
+      msg.classList.add("tearing");
+      msg.style.height = rect.height + "px";
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => msg.classList.add("collapsed"));
+      });
+      setTimeout(() => {
+        msg.remove();
+        if (mode === "all") {
+          const sys = document.createElement("div");
+          sys.className = "sp-sys";
+          sys.textContent = "你撤回了一条消息";
+          messages.appendChild(sys);
+          messages.scrollTop = messages.scrollHeight;
+        }
+      }, 400);
+      setTimeout(() => wrap.remove(), 950);
+    };
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+      addMsg(text, "user");
+      input.value = "";
+      setTimeout(() => {
+        addMsg(
+          inServiceHours()
+            ? "已收到你的消息！人工客服会尽快回复（服务时间 每天 9:00 – 22:00）。"
+            : "当前为非服务时间（每天 9:00 – 22:00），你的留言已记录，客服上线后会第一时间回复。",
+          "bot"
+        );
+        if (!noticeShown) {
+          noticeShown = true;
+          setTimeout(showNotice, 500);
+        }
+      }, 700);
+    });
+  </script>
+</body>
+</html>

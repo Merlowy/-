@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>商品 — SAKURA</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="checkout-page">
+
+  <main class="co-wrap">
+    <div class="co-card st-card">
+
+      <!-- 顶部标签栏 -->
+      <div class="co-tabbar">
+        <div class="co-tab">
+          <span class="co-tab-icon">▣</span> sakura — store
+        </div>
+        <span class="co-tab-btn">+</span>
+        <span class="co-tab-btn">⌄</span>
+        <div class="co-tab-right">
+          <a class="co-toplink" href="login.html">登录</a>
+          <span class="co-sep">|</span>
+          <a class="co-toplink" href="index.html">← 返回</a>
+        </div>
+      </div>
+
+      <!-- 商品列表 -->
+      <div class="st-body">
+        <p class="st-cmd">$ sakura list --all <span class="st-cmd-note"># 首批商品筹备中，以下为占位</span></p>
+
+        <!-- 帆船航道 -->
+        <div class="sea-lane" id="seaLane" aria-hidden="true">
+          <div class="lane-waves"></div>
+          <svg class="sail-boat" viewBox="0 0 54 40" width="50" height="37" fill="none">
+            <g class="boat-wake">
+              <path d="M5 32 H1"/>
+              <path d="M4 35 H0"/>
+            </g>
+            <path d="M6 29 L42 29 L36 36 L12 36 Z" fill="#111110"/>
+            <path d="M24 27 V5" stroke="#111110" stroke-width="2" stroke-linecap="round"/>
+            <path d="M25 8 L39 26 L25 26 Z" fill="#ffffff" stroke="#111110" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M22 11 L11 26 L22 26 Z" fill="#111110"/>
+            <path d="M24 5 L31 7.5 L24 10" fill="none" stroke="#111110" stroke-width="1.8" stroke-linejoin="round"/>
+            <g class="boat-spray">
+              <path d="M43 32 Q47 29 46 25"/>
+              <path d="M44 35 Q49 33 51 29"/>
+            </g>
+          </svg>
+        </div>
+
+        <div class="st-grid">
+
+          <article class="st-item">
+            <h2 class="st-item-head">
+              <span class="co-prompt">&gt;</span> 占位商品 A
+              <span class="st-item-price">¥199</span>
+            </h2>
+            <p class="st-item-meta"><span class="co-dot">●</span> 自动发货 · 库存充足</p>
+            <p class="st-item-tags">[占位] [上架后替换]</p>
+            <button class="st-buy" data-name="占位商品 A" data-price="199">购买 →</button>
+          </article>
+
+          <article class="st-item">
+            <h2 class="st-item-head">
+              <span class="co-prompt">&gt;</span> 占位商品 B
+              <span class="st-item-price">¥99</span>
+            </h2>
+            <p class="st-item-meta"><span class="co-dot">●</span> 自动发货 · 库存充足</p>
+            <p class="st-item-tags">[占位] [上架后替换]</p>
+            <button class="st-buy" data-name="占位商品 B" data-price="99">购买 →</button>
+          </article>
+
+          <article class="st-item">
+            <h2 class="st-item-head">
+              <span class="co-prompt">&gt;</span> 占位商品 C
+              <span class="st-item-price">¥299</span>
+            </h2>
+            <p class="st-item-meta"><span class="co-dot">●</span> 自动发货 · 库存充足</p>
+            <p class="st-item-tags">[占位] [上架后替换]</p>
+            <button class="st-buy" data-name="占位商品 C" data-price="299">购买 →</button>
+          </article>
+
+          <article class="st-item st-item-soon">
+            <h2 class="st-item-head">
+              <span class="co-prompt">&gt;</span> 敬请期待
+              <span class="st-item-price">¥ ——</span>
+            </h2>
+            <p class="st-item-meta"><span class="co-dot">●</span> 正在筹备中</p>
+            <p class="st-item-tags">[即将上架]</p>
+            <button class="st-buy" disabled>暂未开放</button>
+          </article>
+
+        </div>
+      </div>
+
+      <!-- 底部状态栏 -->
+      <div class="co-statusbar">
+        <span class="co-status-item"><span class="co-status-dot">●</span> online</span>
+        <span class="co-status-item">sakura store v0.1.0</span>
+        <span class="co-status-right">
+          guest · 未登录 · <a class="co-status-login" href="login.html">[登录]</a>
+        </span>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 结账弹窗 -->
+  <div class="modal" id="checkoutModal" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="co-card modal-card">
+
+      <div class="co-tabbar">
+        <div class="co-tab">
+          <span class="co-tab-icon">▣</span> sakura — checkout
+        </div>
+        <div class="co-tab-right">
+          <button class="co-toplink co-close" type="button" data-close>esc ✕</button>
+        </div>
+      </div>
+
+      <div class="co-body">
+        <div class="co-left">
+          <section class="co-panel">
+            <h1 class="co-name">
+              <span class="co-prompt">&gt;</span> <span id="mName">占位商品</span>
+              <span class="co-price" id="mPrice">¥199</span>
+            </h1>
+            <p class="co-meta">
+              <span class="co-dot">●</span> 自动发货 · 已售 —— · 库存充足
+            </p>
+            <p class="co-tags">[占位] [上架后替换]</p>
+          </section>
+
+          <section class="co-panel co-info">
+            <p class="co-info-head">$ sakura order --info</p>
+            <ul>
+              <li>购买后订单信息将自动发送至您填写的邮箱，请务必填写正确的邮箱地址。</li>
+              <li>所有商品均由 SAKURA 团队精选并负责发货与售后。</li>
+              <li>支持七天无理由退换，来回运费由我们承担。</li>
+              <li>如有任何问题，请通过首页的客服入口联系我们。</li>
+            </ul>
+            <p class="co-info-warn">[ ！ ] 当前为演示页面，商品与支付均为占位内容，正式上架后开放购买。</p>
+          </section>
+
+          <!-- 樱花树 -->
+          <div class="co-tree" aria-hidden="true">
+            <svg viewBox="0 0 170 130" width="205" height="157">
+              <defs>
+                <g id="skBloom">
+                  <circle cx="0" cy="-3" r="2.1"/>
+                  <circle cx="2.85" cy="-0.93" r="2.1"/>
+                  <circle cx="1.76" cy="2.43" r="2.1"/>
+                  <circle cx="-1.76" cy="2.43" r="2.1"/>
+                  <circle cx="-2.85" cy="-0.93" r="2.1"/>
+                  <circle class="bloom-core" cx="0" cy="0" r="1"/>
+                </g>
+              </defs>
+              <path class="tree-stroke t-trunk" d="M28 126 C30 104 34 88 48 72 C58 60 68 54 84 48"/>
+              <path class="tree-stroke t-b1" d="M56 64 C68 52 82 46 98 42"/>
+              <path class="tree-stroke t-b2" d="M48 72 C42 58 40 48 42 38"/>
+              <path class="tree-stroke t-b3" d="M84 48 C98 42 112 38 126 34"/>
+              <path class="tree-stroke t-b4" d="M98 42 C104 36 108 30 110 24"/>
+              <path class="tree-stroke t-b5" d="M42 44 C38 38 36 32 37 26"/>
+              <path class="tree-stroke t-ground" d="M12 126 L96 126"/>
+              <use href="#skBloom" transform="translate(42,32) scale(1.05)"/>
+              <use href="#skBloom" transform="translate(37,22) scale(0.8)"/>
+              <use href="#skBloom" transform="translate(58,38) scale(0.9)"/>
+              <use href="#skBloom" transform="translate(74,30)"/>
+              <use href="#skBloom" transform="translate(90,22) scale(0.85)"/>
+              <use href="#skBloom" transform="translate(100,34) scale(1.1)"/>
+              <use href="#skBloom" transform="translate(112,20) scale(0.9)"/>
+              <use href="#skBloom" transform="translate(126,30)"/>
+              <use href="#skBloom" transform="translate(138,38) scale(0.75)"/>
+              <use href="#skBloom" transform="translate(64,26) scale(0.7)"/>
+              <circle cx="50" cy="44" r="1.6"/>
+              <circle cx="86" cy="40" r="1.6"/>
+              <circle cx="118" cy="40" r="1.5"/>
+              <circle cx="132" cy="24" r="1.5"/>
+              <circle class="petal petal-1" cx="70" cy="42" r="1.8"/>
+              <circle class="petal petal-2" cx="104" cy="38" r="1.6"/>
+              <circle class="petal petal-3" cx="126" cy="36" r="1.7"/>
+            </svg>
+          </div>
+        </div>
+
+        <form class="co-right" id="checkoutForm">
+          <div class="co-field">
+            <label class="co-label" for="coEmail">&gt; 邮箱地址</label>
+            <input class="co-input" id="coEmail" type="email" required>
+          </div>
+
+          <div class="co-field">
+            <span class="co-label">&gt; 购买数量</span>
+            <div class="co-stepper">
+              <button type="button" class="co-step" id="qtyMinus" aria-label="减少数量">−</button>
+              <span class="co-qty" id="qtyValue">1</span>
+              <button type="button" class="co-step" id="qtyPlus" aria-label="增加数量">+</button>
+            </div>
+          </div>
+
+          <div class="co-field">
+            <label class="co-label" for="coCoupon">&gt; 优惠券</label>
+            <div class="co-select-wrap">
+              <select class="co-select" id="coCoupon">
+                <option value="">不使用优惠券</option>
+              </select>
+              <span class="co-select-arrow">⌄</span>
+            </div>
+          </div>
+
+          <div class="co-field">
+            <span class="co-label">&gt; 支付方式</span>
+            <div class="co-radios">
+              <label class="co-radio">
+                <input type="radio" name="pay" value="balance" checked>
+                <span class="co-radio-mark"></span>
+                <span class="co-radio-text">余额支付（¥0.00）</span>
+              </label>
+              <label class="co-radio">
+                <input type="radio" name="pay" value="wechat">
+                <span class="co-radio-mark"></span>
+                <span class="co-radio-text">微信支付</span>
+              </label>
+              <label class="co-radio">
+                <input type="radio" name="pay" value="alipay">
+                <span class="co-radio-mark"></span>
+                <span class="co-radio-text">支付宝支付</span>
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="co-paybar">
+            <span class="co-pay-left">
+              <span class="co-pay-prompt">$</span> sakura pay
+              <span class="co-pay-flag">--total</span>
+              <strong class="co-pay-amount" id="payAmount">¥199</strong>
+            </span>
+            <span class="co-key">enter ↵</span>
+          </button>
+          <p class="co-msg" id="coMsg">// 演示页面，支付功能暂未开放</p>
+          <p class="co-agree">提交即代表您同意 SAKURA 服务协议</p>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // 帆船驶完（3.5s）后连同航道一起收起
+    const seaLane = document.getElementById("seaLane");
+    setTimeout(() => {
+      seaLane.classList.add("done");
+      setTimeout(() => seaLane.remove(), 600);
+    }, 3600);
+
+    const modal = document.getElementById("checkoutModal");
+    const mName = document.getElementById("mName");
+    const mPrice = document.getElementById("mPrice");
+    const qtyValue = document.getElementById("qtyValue");
+    const payAmount = document.getElementById("payAmount");
+    const coMsg = document.getElementById("coMsg");
+
+    let price = 199;
+    let qty = 1;
+
+    const render = () => {
+      qtyValue.textContent = qty;
+      payAmount.textContent = "¥" + price * qty;
+    };
+
+    const openModal = (name, p) => {
+      price = p;
+      qty = 1;
+      mName.textContent = name;
+      mPrice.textContent = "¥" + p;
+      coMsg.classList.remove("show");
+      render();
+      modal.hidden = false;
+      requestAnimationFrame(() => modal.classList.add("open"));
+      document.body.style.overflow = "hidden";
+    };
+
+    const closeModal = () => {
+      modal.classList.remove("open");
+      document.body.style.overflow = "";
+      setTimeout(() => { modal.hidden = true; }, 350);
+    };
+
+    document.querySelectorAll(".st-buy[data-name]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        openModal(btn.dataset.name, Number(btn.dataset.price));
+      });
+    });
+    modal.querySelectorAll("[data-close]").forEach((el) => {
+      el.addEventListener("click", closeModal);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !modal.hidden) closeModal();
+    });
+
+    document.getElementById("qtyMinus").addEventListener("click", () => {
+      if (qty > 1) { qty--; render(); }
+    });
+    document.getElementById("qtyPlus").addEventListener("click", () => {
+      if (qty < 99) { qty++; render(); }
+    });
+    document.getElementById("checkoutForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      coMsg.classList.add("show");
+    });
+
+  </script>
+</body>
+</html>
